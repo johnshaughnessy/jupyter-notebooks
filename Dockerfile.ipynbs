@@ -12,3 +12,5 @@ RUN useradd -ms /bin/bash ${USER}
 USER ${USER}
 WORKDIR /home/${USER}/
 ENV PATH="/home/${USER}/.local/bin:${PATH}"
+
+RUN pip install diffusers["torch"] transformers accelerate
