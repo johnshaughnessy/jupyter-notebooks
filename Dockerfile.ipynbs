@@ -14,3 +14,4 @@ WORKDIR /home/${USER}/
 ENV PATH="/home/${USER}/.local/bin:${PATH}"
 
 RUN pip install diffusers["torch"] transformers accelerate
+RUN pip install matplotlib
