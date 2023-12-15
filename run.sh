@@ -8,7 +8,7 @@ docker network create osai-bridge || true
 echo "Ensuring that the code and setup directories are owned by the container user."
 echo "This command may require sudo privileges."
 # TODO: There should be a better way to do this.
-sudo chown -R 1000:1000 ./code ./setup /home/$USER/.cache/huggingface
+# sudo chown -R 1000:1000 ./code ./setup /home/$USER/.cache/huggingface
 
 echo
 read -sp "Enter password for Jupyter Lab: " JUPYTER_PASSWORD
@@ -25,5 +25,6 @@ docker run \
     --mount type=bind,source="$(pwd)"/code,target=/home/"$USER"/code \
     --mount type=bind,source="$(pwd)"/setup,target=/setup \
     --mount type=bind,source=/home/$USER/.cache/huggingface,target=/home/$USER/.cache/huggingface \
+    --mount type=bind,source=/home/$USER/.cache/huggingface/hub/,target=/home/$USER/.cache/huggingface/hub/ \
     ipynbs \
     /setup/run-jupyter-lab.sh "$JUPYTER_PASSWORD" 7004
