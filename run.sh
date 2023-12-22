@@ -13,7 +13,19 @@ echo "This command may require sudo privileges."
 echo
 read -sp "Enter password for Jupyter Lab: " JUPYTER_PASSWORD
 echo
-echo "Running ipynbs."
+
+# If a dockerfile is specified, use it. Otherwise, default to "Dockerfile.ipynbs"
+if [ -z "$1" ]; then
+    dockerfile="Dockerfile.ipynbs"
+else
+    dockerfile=$1
+fi
+
+# The image tag should be the dockerfile name without the "Dockerfile." prefix
+tag=$(echo $dockerfile | sed 's/Dockerfile.//')
+
+echo "Running $tag."
+
 docker run \
     --rm \
     --gpus all \
@@ -26,5 +38,5 @@ docker run \
     --mount type=bind,source="$(pwd)"/setup,target=/setup \
     --mount type=bind,source=/home/$USER/.cache/huggingface,target=/home/$USER/.cache/huggingface \
     --mount type=bind,source=/home/$USER/.cache/huggingface/hub/,target=/home/$USER/.cache/huggingface/hub/ \
-    ipynbs \
+    $tag \
     /setup/run-jupyter-lab.sh "$JUPYTER_PASSWORD" 7004
