@@ -1,6 +1,17 @@
 #!/bin/bash
-echo "Stopping ipynbs if it is running."
-docker stop ipynbs || true
+
+# If a dockerfile is specified, use it. Otherwise, default to "Dockerfile.ipynbs"
+if [ -z "$1" ]; then
+    dockerfile="Dockerfile.ipynbs"
+else
+    dockerfile=$1
+fi
+
+# The image tag should be the dockerfile name without the "Dockerfile." prefix
+tag=$(echo $dockerfile | sed 's/Dockerfile.//')
+
+echo "Stopping $tag if it is running."
+docker stop $tag || true
 sleep 1
 
 docker network create osai-bridge || true
@@ -14,16 +25,6 @@ echo
 read -sp "Enter password for Jupyter Lab: " JUPYTER_PASSWORD
 echo
 
-# If a dockerfile is specified, use it. Otherwise, default to "Dockerfile.ipynbs"
-if [ -z "$1" ]; then
-    dockerfile="Dockerfile.ipynbs"
-else
-    dockerfile=$1
-fi
-
-# The image tag should be the dockerfile name without the "Dockerfile." prefix
-tag=$(echo $dockerfile | sed 's/Dockerfile.//')
-
 echo "Running $tag."
 
 docker run \
@@ -31,7 +32,7 @@ docker run \
     --gpus all \
     -d \
     -it \
-    --name ipynbs \
+    --name $tag \
     --network osai-bridge \
     --publish 7004:7004 \
     --mount type=bind,source="$(pwd)"/code,target=/home/"$USER"/code \
