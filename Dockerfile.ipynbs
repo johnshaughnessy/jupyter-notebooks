@@ -16,3 +16,4 @@ ENV PATH="/home/${USER}/.local/bin:${PATH}"
 RUN pip install diffusers["torch"] transformers accelerate
 RUN pip install matplotlib
 RUN pip install peft
+RUN pip install tensorflow[and-cuda]
