@@ -18,3 +18,4 @@ RUN pip install torch torchvision torchaudio
 RUN pip install diffusers["torch"] transformers accelerate
 RUN pip install matplotlib
 RUN pip install peft
+RUN pip install -q optimum["onnxruntime"]
